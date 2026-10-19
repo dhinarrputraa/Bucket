@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Someone sent you a bouquet! | theBouquet</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(180deg, #fff5f7 0%, #fffbfd 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-handwriting {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Animasi Matahari & Awan */
+        @keyframes spinSlow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin-slow {
+            animation: spinSlow 28s linear infinite;
+            transform-origin: 95px 95px;
+        }
+
+        @keyframes floatCloud {
+
+            0%,
+            100% {
+                transform: translateX(0px) translateY(0px);
+            }
+
+            50% {
+                transform: translateX(8px) translateY(-4px);
+            }
+        }
+
+        .cloud-1 {
+            animation: floatCloud 6s ease-in-out infinite;
+        }
+
+        .cloud-2 {
+            animation: floatCloud 8s ease-in-out infinite 1s;
+        }
+
+        /* Animasi Buket Bergoyang Lembut */
+        @keyframes swayBouquet {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(1.2deg);
+            }
+        }
+
+        .bouquet-sway {
+            animation: swayBouquet 4.5s ease-in-out infinite;
+            transform-origin: 200px 430px;
+        }
+
+        /* Denyut Segel Hati Amplop */
+        @keyframes pulseHeart {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.18);
+            }
+        }
+
+        .heart-seal {
+            animation: pulseHeart 1.6s ease-in-out infinite;
+            transform-origin: 200px 305px;
+        }
+
+        /* Kertas Surat Tekstur Pink Watercolor (Slide 3 & 4) */
+        .letter-paper {
+            background-color: #ffeef2;
+            background-image:
+                radial-gradient(circle at 20% 25%, rgba(255, 195, 210, 0.45) 0%, transparent 45%),
+                radial-gradient(circle at 80% 35%, rgba(255, 210, 222, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 30% 75%, rgba(255, 200, 215, 0.4) 0%, transparent 45%),
+                radial-gradient(circle at 75% 85%, rgba(255, 190, 208, 0.45) 0%, transparent 40%);
+            box-shadow: 0 20px 50px rgba(122, 28, 46, 0.18);
+        }
+
+        /* Custom Scrollbar untuk Surat */
+        .letter-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .letter-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 220, 228, 0.4);
+            border-radius: 8px;
+        }
+
+        .letter-scroll::-webkit-scrollbar-thumb {
+            background: rgba(212, 122, 142, 0.6);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 flex flex-col min-h-screen">
+
+    <!-- ================= HEADER NAVIGASI ================= -->
+    <header id="mainHeader"
+        class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-pink-100 px-4 py-3 shadow-sm">
+        <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('bouquet')">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-400 flex items-center justify-center text-white text-xl shadow-sm">
+                    &#128144;
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-bold text-lg tracking-tight text-slate-900">theBouquet</span>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-rose-600">.ME</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-none">Distance will never stop someone who cares</p>
+                </div>
+            </div>
+
+            <!-- Menu Tabs -->
+            <nav class="flex items-center bg-slate-100 p-1 rounded-full text-xs sm:text-sm font-medium">
+                <button id="tabBtn-chat" onclick="switchTab('chat')"
+                    class="px-3.5 py-1.5 rounded-full transition-all text-slate-600 hover:text-slate-900">
+                    &#128172; 1. Chat POV
+                </button>
+                <button id="tabBtn-bouquet" onclick="switchTab('bouquet')"
+                    class="px-3.5 py-1.5 rounded-full transition-all bg-white text-rose-600 shadow-sm font-semibold">
+                    &#128144; 2. Buket &amp; Surat
+                </button>
+                <button id="tabBtn-custom" onclick="switchTab('custom')"
+                    class="px-3.5 py-1.5 rounded-full transition-all text-slate-600 hover:text-slate-900">
+                    &#10024; Buat Sendiri
+                </button>
+            </nav>
+
+            <!-- Tombol Musik & Bagikan -->
+            <div class="flex items-center gap-2">
+                <button id="musicBtn" onclick="toggleMusic()"
+                    class="px-3 py-1.5 rounded-full text-xs font-semibold bg-pink-50 text-rose-600 border border-pink-200 hover:bg-pink-100 transition">
+                    &#127925; Musik: Off
+                </button>
+                <button id="shareHeaderBtn" onclick="copyShareLink()"
+                    class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow hover:opacity-95 transition">
+                    &#128279; Kirim ke Doi
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= KONTEN UTAMA ================= -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6">
+
+        <!-- 1. TAMPILAN SLIDE 1: SIMULASI CHAT LDR GELAP -->
+        <section id="view-chat" class="hidden w-full max-w-md mx-auto">
+            <div
+                class="rounded-3xl bg-[#121318] text-white p-5 sm:p-6 shadow-2xl border border-slate-800 relative overflow-hidden">
+                <!-- Efek Glow Background -->
+                <div
+                    class="absolute -bottom-16 -right-10 w-60 h-60 bg-slate-500/20 rounded-full blur-3xl pointer-events-none">
+                </div>
+
+                <!-- Caption POV di Atas -->
+                <div class="text-center my-6">
+                    <p id="povCaptionText"
+                        class="text-lg sm:text-xl font-bold leading-snug tracking-wide text-white drop-shadow">
+                        POV: You’re in LDR, but he still finds a way to give you flowers
+                    </p>
+                </div>
+
+                <!-- Reaction Bar -->
+                <div
+                    class="bg-[#1e2028] border border-slate-700/60 rounded-full px-4 py-2.5 flex items-center justify-between max-w-xs mx-auto mb-5 shadow-lg">
+                    <button onclick="triggerReaction('&#10084;&#65039;')"
+                        class="text-2xl hover:scale-125 transition transform">&#10084;&#65039;</button>
+                    <button onclick="triggerReaction('&#128514;')"
+                        class="text-2xl hover:scale-125 transition transform">&#128514;</button>
+                    <button onclick="triggerReaction('&#128558;')"
+                        class="text-2xl hover:scale-125 transition transform">&#128558;</button>
+                    <button onclick="triggerReaction('&#128546;')"
+                        class="text-2xl hover:scale-125 transition transform">&#128546;</button>
+                    <button onclick="triggerReaction('&#128545;')"
+                        class="text-2xl hover:scale-125 transition transform">&#128545;</button>
+                    <button onclick="triggerReaction('&#128077;')"
+                        class="text-2xl hover:scale-125 transition transform">&#128077;</button>
+                    <span class="text-slate-400 text-xl font-light px-1">+</span>
+                </div>
+
+                <!-- Kartu Chat Link Preview (Klik untuk buka buket) -->
+                <div onclick="switchTab('bouquet')"
+                    class="cursor-pointer group max-w-[270px] rounded-2xl overflow-hidden bg-[#262830] border border-slate-700/80 shadow-xl transition transform hover:scale-[1.02]">
+                    <!-- Gambar Preview Buket Mini -->
+                    <div class="bg-white p-4 flex items-center justify-center h-40 relative">
+                        <svg viewBox="0 0 200 200" class="w-32 h-32">
+                            <!-- Daun & Ranting -->
+                            <path d="M100 130 L70 60 M100 130 L130 60 M100 130 L100 45" stroke="#2d5a27"
+                                stroke-width="3" />
+                            <circle cx="75" cy="70" r="14" fill="#4d7c3f" />
+                            <circle cx="125" cy="70" r="14" fill="#4d7c3f" />
+                            <circle cx="100" cy="58" r="16" fill="#4d7c3f" />
+                            <!-- Mawar Merah & Tulip Kuning (Ilustrasi Slide 1) -->
+                            <circle cx="82" cy="82" r="13" fill="#d62828" stroke="#1e293b" stroke-width="2" />
+                            <circle cx="118" cy="85" r="13" fill="#d62828" stroke="#1e293b" stroke-width="2" />
+                            <circle cx="100" cy="68" r="12" fill="#facc15" stroke="#1e293b" stroke-width="2" />
+                            <circle cx="68" cy="62" r="9" fill="#facc15" stroke="#1e293b" stroke-width="2" />
+                            <circle cx="132" cy="62" r="9" fill="#facc15" stroke="#1e293b" stroke-width="2" />
+                            <!-- Kertas Buket Putih -->
+                            <polygon points="65,98 135,98 112,160 88,160" fill="#f8fafc" stroke="#334155"
+                                stroke-width="2.5" stroke-linejoin="round" />
+                            <polygon points="88,160 112,160 118,185 82,185" fill="#f1f5f9" stroke="#334155"
+                                stroke-width="2.5" stroke-linejoin="round" />
+                            <!-- Pita -->
+                            <rect x="86" y="156" width="28" height="7" rx="3" fill="#e2e8f0" stroke="#334155"
+                                stroke-width="2" />
+                            <!-- Amplop Kecil "To You" -->
+                            <g transform="translate(105, 110) rotate(22)">
+                                <rect x="0" y="0" width="42" height="28" rx="3" fill="#ffffff" stroke="#334155"
+                                    stroke-width="2" />
+                                <polyline points="0,0 21,15 42,0" fill="none" stroke="#334155" stroke-width="2" />
+                                <circle cx="21" cy="14" r="4" fill="#e11d48" />
+                                <text x="6" y="24" font-size="6" font-weight="bold" fill="#334155">To You</text>
+                            </g>
+                        </svg>
+                        <span
+                            class="absolute bottom-2 right-2 text-[10px] bg-rose-500 text-white px-2 py-0.5 rounded-full opacity-90 group-hover:opacity-100">
+                            Klik untuk buka &#8594;
+                        </span>
+                    </div>
+                    <!-- Footer Kartu Chat -->
+                    <div class="p-3.5 bg-[#23252d]">
+                        <p class="font-bold text-sm text-white">Someone sent you a bouquet!</p>
+                        <div class="flex items-center gap-1.5 text-slate-400 text-xs mt-1">
+                            <span>&#127760;</span>
+                            <span>thebouquet.me</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kotak Reply di Bawahnya -->
+                <div class="mt-3 max-w-[210px] rounded-2xl bg-[#1a1c23]/90 border border-slate-800 p-3 text-slate-400">
+                    <p class="text-[11px] mb-2">10:19 AM</p>
+                    <div class="flex items-center gap-2 text-slate-200 text-sm font-medium cursor-pointer"
+                        onclick="switchTab('bouquet')">
+                        <span>&#8617;</span>
+                        <span>Buka Buket Sekarang</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. TAMPILAN SLIDE 2: KARTU BUKET INTERAKTIF -->
+        <section id="view-bouquet" class="w-full max-w-md mx-auto flex flex-col items-center">
+            <!-- Bar Aksi Cepat di Atas Kartu -->
+            <div id="quickNavRow" class="flex flex-wrap items-center justify-center gap-2 mb-3 text-xs">
+                <button onclick="switchTab('chat')"
+                    class="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm transition">
+                    &#8592; Slide 1 (Chat)
+                </button>
+                <button onclick="openLetterModal()"
+                    class="px-3.5 py-1.5 rounded-full bg-pink-100 border border-pink-200 text-rose-700 font-semibold hover:bg-pink-200 shadow-sm transition">
+                    &#128140; Buka Surat (Slide 3-4)
+                </button>
+                <span class="text-slate-400 text-[11px] hidden sm:inline">Klik amplop untuk membaca surat
+                    &#10024;</span>
+            </div>
+
+            <!-- Bingkai Kartu Putih (Persis Slide 2) -->
+            <div class="w-full bg-white p-3.5 sm:p-5 rounded-3xl shadow-xl border border-pink-100/80 relative">
+
+                <!-- Badge Petunjuk Klik Amplop -->
+                <button onclick="openLetterModal()"
+                    class="absolute top-6 right-6 z-10 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full shadow-md border border-pink-100 flex items-center gap-1.5 text-xs font-medium text-rose-600 hover:scale-105 transition">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                    <span>Klik amplop &#128140; untuk baca surat</span>
+                </button>
+
+                <!-- Kanvas SVG Ilustrasi Buket -->
+                <div id="skyCanvas"
+                    class="w-full aspect-[4/5] rounded-2xl overflow-hidden relative bg-gradient-to-b from-[#eef4ff] via-[#f7faff] to-[#ffffff] flex items-center justify-center">
+                    <svg viewBox="0 0 400 500" class="w-full h-full select-none">
+
+                        <!-- MATAHARI (Kiri Atas) -->
+                        <g id="sunGroup" class="animate-spin-slow">
+                            <circle cx="95" cy="95" r="22" fill="#facc15" />
+                            <g stroke="#facc15" stroke-width="4" stroke-linecap="round">
+                                <line x1="95" y1="56" x2="95" y2="64" />
+                                <line x1="95" y1="126" x2="95" y2="134" />
+                                <line x1="56" y1="95" x2="64" y2="95" />
+                                <line x1="126" y1="95" x2="134" y2="95" />
+                                <line x1="67" y1="67" x2="73" y2="73" />
+                                <line x1="117" y1="117" x2="123" y2="123" />
+                                <line x1="123" y1="67" x2="117" y2="73" />
+                                <line x1="73" y1="117" x2="67" y2="123" />
+                            </g>
+                        </g>
+
+                        <!-- BINTANG (Hanya muncul jika mode malam) -->
+                        <g id="starsGroup" class="hidden" fill="#fde047">
+                            <circle cx="65" cy="60" r="2" />
+                            <circle cx="150" cy="45" r="2.5" />
+                            <circle cx="290" cy="55" r="2" />
+                            <circle cx="340" cy="100" r="1.8" />
+                            <circle cx="80" cy="150" r="1.5" />
+                        </g>
+
+                        <!-- AWAN PUTIH -->
+                        <g class="cloud-1" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2">
+                            <path d="M185 65 Q192 52 206 56 Q216 46 229 55 Q242 56 240 69 Z" />
+                            <path d="M122 140 Q130 127 144 131 Q154 121 167 130 Q180 131 178 144 Z" />
+                        </g>
+                        <g class="cloud-2" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2">
+                            <path d="M245 100 Q253 87 267 91 Q277 81 290 90 Q303 91 301 104 Z" />
+                            <path d="M312 126 Q320 114 333 118 Q343 109 355 117 Q366 118 364 130 Z" />
+                            <path d="M55 190 Q63 178 76 182 Q86 173 98 181 Q109 182 107 194 Z" />
+                        </g>
+
+                        <!-- ================= GRUP BUKET BUNGA ================= -->
+                        <g class="bouquet-sway">
+                            <!-- Kertas Kado Belakang (Bagian Atas) -->
+                            <polygon points="105,190 295,190 250,320 150,320" fill="#f7eedc" stroke="#e6d7be"
+                                stroke-width="2" stroke-linejoin="round" />
+
+                            <!-- Dedaunan Hijau Rimbun -->
+                            <g fill="#2e7d32">
+                                <ellipse cx="145" cy="245" rx="35" ry="22" transform="rotate(-25 145 245)" />
+                                <ellipse cx="255" cy="245" rx="35" ry="22" transform="rotate(25 255 245)" />
+                                <ellipse cx="200" cy="255" rx="52" ry="25" />
+                                <circle cx="165" cy="195" r="24" fill="#388e3c" />
+                                <circle cx="235" cy="195" r="24" fill="#388e3c" />
+                                <circle cx="200" cy="180" r="28" fill="#43a047" />
+                            </g>
+
+                            <!-- RANGKAIAN BUNGA (Disesuaikan dengan Tema) -->
+                            <g id="flowersContainer">
+                                <!-- Bunga Kecil Atas (4 kuntum) -->
+                                <g transform="translate(158,154)">
+                                    <circle cx="0" cy="-8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="-8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="0" r="4" fill="#fef08a" />
+                                </g>
+                                <g transform="translate(185,144)">
+                                    <circle cx="0" cy="-8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="-8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="0" r="4" fill="#fef08a" />
+                                </g>
+                                <g transform="translate(215,144)">
+                                    <circle cx="0" cy="-8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="-8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="0" r="4" fill="#fef08a" />
+                                </g>
+                                <g transform="translate(242,154)">
+                                    <circle cx="0" cy="-8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="8" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="-8" cy="0" r="6" class="petal-secondary" fill="#fb923c" />
+                                    <circle cx="0" cy="0" r="4" fill="#fef08a" />
+                                </g>
+
+                                <!-- Mawar / Ranunculus Oranye Kiri & Kanan (Persis Slide 2) -->
+                                <g transform="translate(124,195)">
+                                    <circle cx="0" cy="0" r="20" class="rose-outer" fill="#f97316" />
+                                    <circle cx="0" cy="0" r="14" class="rose-mid" fill="#ea580c" />
+                                    <circle cx="0" cy="0" r="8" class="rose-inner" fill="#fdba74" />
+                                    <circle cx="0" cy="0" r="4" fill="#9a3412" />
+                                </g>
+                                <g transform="translate(276,195)">
+                                    <circle cx="0" cy="0" r="20" class="rose-outer" fill="#f97316" />
+                                    <circle cx="0" cy="0" r="14" class="rose-mid" fill="#ea580c" />
+                                    <circle cx="0" cy="0" r="8" class="rose-inner" fill="#fdba74" />
+                                    <circle cx="0" cy="0" r="4" fill="#9a3412" />
+                                </g>
+
+                                <!-- Bunga Lily / Daffodil Kuning Utama di Tengah -->
+                                <g transform="translate(168,185)">
+                                    <ellipse cx="0" cy="-16" rx="8" ry="16" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="0" cy="16" rx="8" ry="16" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="-16" cy="0" rx="16" ry="8" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="16" cy="0" rx="16" ry="8" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="-11" cy="-11" rx="14" ry="7" transform="rotate(45 -11 -11)"
+                                        class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="11" cy="-11" rx="14" ry="7" transform="rotate(-45 11 -11)"
+                                        class="lily-petal-alt" fill="#fde047" />
+                                    <circle cx="0" cy="0" r="8" fill="#f59e0b" />
+                                </g>
+                                <g transform="translate(232,185)">
+                                    <ellipse cx="0" cy="-16" rx="8" ry="16" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="0" cy="16" rx="8" ry="16" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="-16" cy="0" rx="16" ry="8" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="16" cy="0" rx="16" ry="8" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="-11" cy="-11" rx="14" ry="7" transform="rotate(45 -11 -11)"
+                                        class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="11" cy="-11" rx="14" ry="7" transform="rotate(-45 11 -11)"
+                                        class="lily-petal-alt" fill="#fde047" />
+                                    <circle cx="0" cy="0" r="8" fill="#f59e0b" />
+                                </g>
+                                <g transform="translate(200,172)">
+                                    <ellipse cx="0" cy="-16" rx="8" ry="16" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="0" cy="16" rx="8" ry="16" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="-16" cy="0" rx="16" ry="8" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="16" cy="0" rx="16" ry="8" class="lily-petal" fill="#fef08a" />
+                                    <circle cx="0" cy="0" r="8" fill="#f59e0b" />
+                                </g>
+                                <g transform="translate(158,220)">
+                                    <ellipse cx="0" cy="-15" rx="7" ry="15" class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="0" cy="15" rx="7" ry="15" class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="-15" cy="0" rx="15" ry="7" class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="15" cy="0" rx="15" ry="7" class="lily-petal-alt" fill="#fde047" />
+                                    <circle cx="0" cy="0" r="7" fill="#ea580c" />
+                                </g>
+                                <g transform="translate(242,220)">
+                                    <ellipse cx="0" cy="-15" rx="7" ry="15" class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="0" cy="15" rx="7" ry="15" class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="-15" cy="0" rx="15" ry="7" class="lily-petal-alt" fill="#fde047" />
+                                    <ellipse cx="15" cy="0" rx="15" ry="7" class="lily-petal-alt" fill="#fde047" />
+                                    <circle cx="0" cy="0" r="7" fill="#ea580c" />
+                                </g>
+                                <g transform="translate(200,212)">
+                                    <ellipse cx="0" cy="-18" rx="9" ry="18" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="0" cy="18" rx="9" ry="18" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="-18" cy="0" rx="18" ry="9" class="lily-petal" fill="#fef08a" />
+                                    <ellipse cx="18" cy="0" rx="18" ry="9" class="lily-petal" fill="#fef08a" />
+                                    <circle cx="0" cy="0" r="9" fill="#d97706" />
+                                </g>
+
+                                <!-- 3 Bunga Matahari Kecil di Baris Bawah Buket -->
+                                <g transform="translate(172,248)">
+                                    <circle cx="0" cy="0" r="13" fill="#facc15" stroke="#eab308" stroke-width="2"
+                                        stroke-dasharray="4 2" />
+                                    <circle cx="0" cy="0" r="6" fill="#451a03" />
+                                </g>
+                                <g transform="translate(200,253)">
+                                    <circle cx="0" cy="0" r="14" fill="#facc15" stroke="#eab308" stroke-width="2"
+                                        stroke-dasharray="4 2" />
+                                    <circle cx="0" cy="0" r="6.5" fill="#451a03" />
+                                </g>
+                                <g transform="translate(228,248)">
+                                    <circle cx="0" cy="0" r="13" fill="#facc15" stroke="#eab308" stroke-width="2"
+                                        stroke-dasharray="4 2" />
+                                    <circle cx="0" cy="0" r="6" fill="#451a03" />
+                                </g>
+                            </g>
+
+                            <!-- Kertas Pembungkus Buket Depan (Kerucut Bawah) -->
+                            <polygon points="135,250 200,285 265,250 232,340 168,340" fill="#fbf4e6" stroke="#eadbc4"
+                                stroke-width="1.5" />
+                            <polygon points="168,340 232,340 242,445 158,445" fill="#fdf8ee" stroke="#eadbc4"
+                                stroke-width="1.5" />
+                            <!-- Lipatan Bayangan Tengah Kertas -->
+                            <polygon points="196,285 204,285 212,445 188,445" fill="#f3e6d0" opacity="0.6" />
+
+                            <!-- Pita Buket (Tan / Cokelat Muda) -->
+                            <g fill="none" stroke="#cfb087" stroke-width="4.5" stroke-linecap="round">
+                                <path d="M164,338 Q200,344 236,338" />
+                                <!-- Ikatan Pita Kiri & Kanan -->
+                                <path d="M200,340 C175,320 155,342 188,345" />
+                                <path d="M200,340 C225,320 245,342 212,345" />
+                                <!-- Tali Pita Menjuntai ke Bawah -->
+                                <path d="M192,342 L180,445" />
+                                <path d="M208,342 L220,445" />
+                            </g>
+
+                            <!-- AMPLOP SURAT INTERAKTIF DI TENGAH BUKET -->
+                            <g onclick="openLetterModal()" class="cursor-pointer hover:opacity-95 transition">
+                                <rect x="172" y="286" width="56" height="38" rx="4" fill="#ffffff" stroke="#e2e8f0"
+                                    stroke-width="1.8" />
+                                <polyline points="172,286 200,308 228,286" fill="none" stroke="#cbd5e1"
+                                    stroke-width="1.8" />
+                                <!-- Segel Hati Pink -->
+                                <g class="heart-seal">
+                                    <circle cx="200" cy="305" r="9" fill="#fce7f3" />
+                                    <path
+                                        d="M200 310 C200 310 193 305 193 301 C193 298.5 195 297 197 297 C198.5 297 199.5 298 200 299 C200.5 298 201.5 297 203 297 C205 297 207 298.5 207 301 C207 305 200 310 200 310 Z"
+                                        fill="#ec4899" />
+                                </g>
+                            </g>
+                        </g>
+
+                        <!-- ================= ITEM KIRI: MINUMAN (BOBA / MATCHA) ================= -->
+                        <g id="leftItemGroup" transform="translate(105, 345)">
+                            <!-- Sedotan Merah Miring -->
+                            <line x1="34" y1="15" x2="40" y2="-10" stroke="#ef4444" stroke-width="6"
+                                stroke-linecap="round" />
+                            <!-- Gelas Boba -->
+                            <polygon points="10,20 50,20 44,92 16,92" fill="#fde6c4" stroke="#d6b88c" stroke-width="2"
+                                stroke-linejoin="round" />
+                            <!-- Cairan Milk Tea -->
+                            <polygon id="drinkLiquid" points="12,32 48,32 43,90 17,90" fill="#eab676" opacity="0.85" />
+                            <!-- Tutup Gelas Cembung Putih -->
+                            <path d="M8,20 Q30,6 52,20 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+                            <ellipse cx="30" cy="20" rx="22" ry="4" fill="#f8fafc" stroke="#cbd5e1"
+                                stroke-width="1.5" />
+                            <!-- Mutiara Tapioka (Boba Pearls) -->
+                            <g id="bobaPearls" fill="#29170b">
+                                <circle cx="22" cy="84" r="3.5" />
+                                <circle cx="30" cy="85" r="3.5" />
+                                <circle cx="38" cy="84" r="3.5" />
+                                <circle cx="20" cy="76" r="3.5" />
+                                <circle cx="27" cy="77" r="3.5" />
+                                <circle cx="35" cy="76" r="3.5" />
+                                <circle cx="40" cy="78" r="3" />
+                                <circle cx="24" cy="69" r="3.5" />
+                                <circle cx="32" cy="70" r="3.5" />
+                                <circle cx="38" cy="69" r="3" />
+                            </g>
+                        </g>
+
+                        <!-- ================= ITEM KANAN: BONEKA BERUANG + CINCIN + TAG "For You" ================= -->
+                        <g id="rightItemGroup" transform="translate(245, 335)">
+                            <!-- Tag "For You" di Telinga Kanan -->
+                            <g transform="translate(56, 26) rotate(8)">
+                                <line x1="-8" y1="-4" x2="6" y2="2" stroke="#cbd5e1" stroke-width="1.5" />
+                                <rect x="0" y="0" width="38" height="44" rx="3" fill="#ffffff" stroke="#cbd5e1"
+                                    stroke-width="1.2" />
+                                <circle cx="19" cy="6" r="2" fill="#94a3b8" />
+                                <text x="19" y="26" font-size="9" font-family="serif" fill="#475569"
+                                    text-anchor="middle" font-style="italic">For You</text>
+                            </g>
+
+                            <!-- Telinga Beruang -->
+                            <circle id="plushEarL" cx="15" cy="24" r="11" fill="#7c5338" />
+                            <circle cx="15" cy="24" r="6" fill="#d6bfa9" />
+                            <circle id="plushEarR" cx="55" cy="28" r="11" fill="#7c5338" />
+                            <circle cx="55" cy="28" r="6" fill="#d6bfa9" />
+
+                            <!-- Badan & Kaki Beruang -->
+                            <ellipse id="plushBody" cx="35" cy="78" rx="22" ry="24" fill="#7c5338" />
+                            <circle id="plushFootL" cx="18" cy="95" r="9" fill="#654129" />
+                            <circle id="plushFootR" cx="52" cy="95" r="9" fill="#654129" />
+
+                            <!-- Kepala Beruang -->
+                            <circle id="plushHead" cx="35" cy="44" r="24" fill="#7c5338" />
+                            <!-- Moncong Putih/Krem -->
+                            <ellipse cx="35" cy="49" rx="9" ry="7" fill="#e6d3c1" />
+                            <ellipse cx="35" cy="46" rx="4" ry="3" fill="#3e2723" />
+                            <path d="M35,49 L35,53 M32,53 Q35,55 38,53" stroke="#3e2723" stroke-width="1.5"
+                                fill="none" />
+                            <!-- Mata -->
+                            <circle cx="26" cy="40" r="2.6" fill="#1e1b18" />
+                            <circle cx="44" cy="42" r="2.6" fill="#1e1b18" />
+
+                            <!-- Cincin Berlian yang Dipegang Beruang -->
+                            <circle cx="35" cy="82" r="10" fill="none" stroke="#facc15" stroke-width="3.5" />
+                            <polygon points="35,65 30,71 35,75 40,71" fill="#e0f2fe" stroke="#38bdf8"
+                                stroke-width="1" />
+
+                            <!-- Tangan Beruang Memegang Cincin -->
+                            <ellipse id="plushArmL" cx="21" cy="76" rx="9" ry="6" transform="rotate(25 21 76)"
+                                fill="#654129" />
+                            <ellipse id="plushArmR" cx="49" cy="76" rx="9" ry="6" transform="rotate(-25 49 76)"
+                                fill="#654129" />
+                        </g>
+
+                        <!-- RUMPUT HIJAU BERGELOMBANG DI BAGIAN BAWAH -->
+                        <g fill="#7cb342">
+                            <rect x="35" y="438" width="330" height="22" rx="4" />
+                            <!-- Lengkungan Rumput -->
+                            <circle cx="48" cy="438" r="10" />
+                            <circle cx="66" cy="438" r="10" />
+                            <circle cx="84" cy="438" r="10" />
+                            <circle cx="102" cy="438" r="10" />
+                            <circle cx="120" cy="438" r="10" />
+                            <circle cx="138" cy="438" r="10" />
+                            <circle cx="156" cy="438" r="10" />
+                            <circle cx="174" cy="438" r="10" />
+                            <circle cx="192" cy="438" r="10" />
+                            <circle cx="210" cy="438" r="10" />
+                            <circle cx="228" cy="438" r="10" />
+                            <circle cx="246" cy="438" r="10" />
+                            <circle cx="264" cy="438" r="10" />
+                            <circle cx="282" cy="438" r="10" />
+                            <circle cx="300" cy="438" r="10" />
+                            <circle cx="318" cy="438" r="10" />
+                            <circle cx="336" cy="438" r="10" />
+                            <circle cx="354" cy="438" r="10" />
+                        </g>
+
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. TAMPILAN KUSTOMISASI ("BUAT SENDIRI") -->
+        <section id="view-custom" class="hidden w-full max-w-2xl mx-auto">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-pink-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">&#10024; Kustomisasi Buket &amp; Surat Cinta</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Ubah nama, isi surat, dan warna bunga, lalu salin link
+                            khusus untuk pasanganmu.</p>
+                    </div>
+                    <button onclick="switchTab('bouquet')" class="text-xs font-semibold text-rose-600 hover:underline">
+                        Lihat Hasil &#8594;
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Panggilan Dia
+                            (Penerima)</label>
+                        <input id="inputRecipient" type="text" placeholder="Contoh: Mika"
+                            class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-400"
+                            oninput="applyCustomizations()" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Kamu (Pengirim)</label>
+                        <input id="inputSender" type="text" placeholder="Contoh: Kea"
+                            class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-400"
+                            oninput="applyCustomizations()" />
+                    </div>
+                </div>
+
+                <!-- Pilihan Cepat Bahasa Surat -->
+                <div class="mb-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                        <label class="text-xs font-semibold text-slate-700">Isi Surat Cinta</label>
+                        <div class="flex gap-1.5">
+                            <button onclick="setLetterTemplate('en')"
+                                class="text-[11px] px-2.5 py-1 rounded-lg bg-pink-50 text-rose-600 hover:bg-pink-100 font-medium transition">
+                                Template Inggris (Default)
+                            </button>
+                            <button onclick="setLetterTemplate('id')"
+                                class="text-[11px] px-2.5 py-1 rounded-lg bg-pink-50 text-rose-600 hover:bg-pink-100 font-medium transition">
+                                Template Indonesia LDR
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="inputMessage" rows="6"
+                        class="w-full p-3.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-400 leading-relaxed"
+                        oninput="applyCustomizations()"></textarea>
+                </div>
+
+                <!-- Opsi Visual Buket -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tema Bunga</label>
+                        <select id="selectFlower" onchange="applyCustomizations()"
+                            class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm bg-white">
+                            <option value="yellow">Yellow Lily &amp; Sunflower (Slide 2)</option>
+                            <option value="red">Red Rose &amp; Pink Romance</option>
+                            <option value="pink">Pink Pastel &amp; Sakura</option>
+                            <option value="blue">Blue Sky &amp; White Lily</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Minuman Kiri</label>
+                        <select id="selectDrink" onchange="applyCustomizations()"
+                            class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm bg-white">
+                            <option value="boba">Brown Sugar Boba</option>
+                            <option value="matcha">Iced Matcha Boba</option>
+                            <option value="strawberry">Strawberry Milk Boba</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Suasana Langit</label>
+                        <select id="selectSky" onchange="applyCustomizations()"
+                            class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm bg-white">
+                            <option value="day">Cerah Siang Hari (Default)</option>
+                            <option value="sunset">Senja Romantis (Sunset)</option>
+                            <option value="night">Malam Berbintang</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tombol Simpan & Salin Link -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+                    <button onclick="openLetterModal()"
+                        class="px-4 py-2.5 rounded-xl bg-pink-50 text-rose-600 font-semibold text-sm hover:bg-pink-100 transition">
+                        &#128140; Preview Surat Cinta
+                    </button>
+                    <button onclick="copyShareLink()"
+                        class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-semibold text-sm shadow-md hover:opacity-95 transition">
+                        &#128279; Salin Link Khusus Doi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= MODAL SURAT CINTA (PERSIS SLIDE 3 & 4) ================= -->
+    <div id="letterModal"
+        class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="letter-paper w-full max-w-md rounded-3xl p-2.5 sm:p-3 relative animate-[fadeIn_0.25s_ease-out]">
+
+            <!-- Bingkai Garis Putus-Putus di Dalam Kertas Surat -->
+            <div
+                class="border-2 border-dashed border-[#e5b8c2] rounded-2xl p-5 sm:p-7 max-h-[84vh] overflow-y-auto letter-scroll relative text-[#7a1c2e]">
+
+                <!-- Tombol Tutup (X) -->
+                <button onclick="closeLetterModal()"
+                    class="sticky top-0 float-right text-slate-400 hover:text-rose-700 text-xl font-bold leading-none p-1">
+                    &#10005;
+                </button>
+
+                <!-- Sapaan Pembuka + Hati Pink di Belakang Teks (Persis Slide 3) -->
+                <div class="relative inline-block mt-1 mb-5">
+                    <svg viewBox="0 0 60 55" class="w-11 h-10 absolute -top-3 -left-2 opacity-65 pointer-events-none">
+                        <path
+                            d="M30 50 C30 50 5 34 5 17 C5 8 12 2 20 2 C25 2 28 5 30 9 C32 5 35 2 40 2 C48 2 55 8 55 17 C55 34 30 50 30 50 Z"
+                            fill="#f9a8d4" />
+                    </svg>
+                    <h3 id="letterGreeting"
+                        class="font-handwriting text-3xl sm:text-4xl font-bold relative z-10 tracking-wide">
+                        Dearest Mika,
+                    </h3>
+                </div>
+
+                <!-- Isi Surat Tulisan Tangan -->
+                <div id="letterBody"
+                    class="font-handwriting text-[23px] sm:text-[25px] leading-[1.55] space-y-5 whitespace-pre-line">
+                </div>
+
+                <!-- Tanda Tangan Pengirim di Kanan Bawah + Hati Pink (Persis Slide 4) -->
+                <div class="mt-8 mb-6 flex justify-end">
+                    <div class="relative inline-block pr-2">
+                        <svg viewBox="0 0 60 55"
+                            class="w-12 h-11 absolute -top-2 right-0 opacity-60 pointer-events-none">
+                            <path
+                                d="M30 50 C30 50 5 34 5 17 C5 8 12 2 20 2 C25 2 28 5 30 9 C32 5 35 2 40 2 C48 2 55 8 55 17 C55 34 30 50 30 50 Z"
+                                fill="#f9a8d4" />
+                        </svg>
+                        <p id="letterSignature" class="font-handwriting text-3xl font-bold relative z-10">
+                            From, Kea
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer Surat (Persis Slide 4) -->
+                <div
+                    class="pt-4 border-t border-[#ecc8d0] flex items-center justify-between text-[10px] sm:text-[11px] tracking-wider font-semibold text-[#b85d70]">
+                    <span>POWERED BY <strong class="text-[#8c2339]">THEBOUQUET.ME</strong></span>
+                    <button onclick="closeLetterModal(); switchTab('custom');"
+                        class="text-[#8c2339] hover:underline flex items-center gap-1">
+                        <span>CREATE YOUR OWN</span>
+                        <span>&#8594;</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifikasi -->
+    <div id="toastBox"
+        class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 text-white text-xs sm:text-sm font-medium px-4 py-2.5 rounded-full shadow-lg">
+        Link berhasil disalin!
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIKA & PENGATURAN ================= -->
+    <script>
+        /**
+         * 💡 UBAH DATA DEFAULT DI BAWAH INI DI VS CODE KAMU!
+         * Kalau kamu mengubah nama & pesan di sini, maka link website kamu
+         * akan langsung menampilkan nama dia tanpa perlu panjang-panjang.
+         */
+        const DEFAULT_CONFIG = {
+            recipient: "Mika",
+            sender: "Kea",
+            flower: "yellow",
+            drink: "boba",
+            sky: "day",
+            message: `My love,
+
+I may not be there beside you to give you these flowers myself, so I'm sending you this little bouquet instead. I hope these flowers remind you how much you mean to me. Even from far away, you always have a special place in my heart. I'm always proud of you, no matter what. I see how hard you try, and I hope you know that I'll always be here cheering for you.
+
+Distance may keep us apart for now, but it will never change how much I love you. I can't wait for the day I can finally give you real flowers and hold you in my arms.
+
+Until then, here's a little piece of my love for you. <3
+
+I love you always, my Mika.`
+        };
+
+        const TEMPLATES = {
+            en: DEFAULT_CONFIG.message,
+            id: `Sayangku,
+
+Aku mungkin belum bisa berada di sampingmu saat ini untuk memberikan bunga ini secara langsung, jadi aku mengirimkan buket kecil ini untukmu. Semoga bunga ini selalu mengingatkanmu betapa berartinya kamu bagiku. Meskipun jarak memisahkan kita sekarang, kamu selalu punya tempat paling spesial di hatiku.
+
+Aku selalu bangga padamu. Aku melihat betapa kerasnya kamu berusaha setiap hari, dan aku ingin kamu tahu bahwa aku akan selalu ada di sini mendukungmu.
+
+Jarak mungkin memisahkan kita sementara, tapi tidak akan pernah mengubah besarnya rasa sayangku padamu. Tunggu hari di mana aku bisa memelukmu dan memberikan bunga asli secara langsung ya. <3`
+        };
+
+        // State Aplikasi
+        let state = { ...DEFAULT_CONFIG };
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let musicInterval = null;
+
+        // Inisialisasi saat halaman dimuat
+        window.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("to")) state.recipient = params.get("to");
+            if (params.get("from")) state.sender = params.get("from");
+            if (params.get("msg")) state.message = params.get("msg");
+            if (params.get("flower")) state.flower = params.get("flower");
+            if (params.get("drink")) state.drink = params.get("drink");
+            if (params.get("sky")) state.sky = params.get("sky");
+
+            // Isi form dengan state saat ini
+            document.getElementById("inputRecipient").value = state.recipient;
+            document.getElementById("inputSender").value = state.sender;
+            document.getElementById("inputMessage").value = state.message;
+            document.getElementById("selectFlower").value = state.flower;
+            document.getElementById("selectDrink").value = state.drink;
+            document.getElementById("selectSky").value = state.sky;
+
+            renderAll();
+
+            // Jika dibuka oleh pasangan dari link khusus (?mode=gift), tampilkan mode bersih
+            if (params.get("mode") === "gift") {
+                document.getElementById("tabBtn-custom").classList.add("hidden");
+                document.getElementById("shareHeaderBtn").classList.add("hidden");
+            }
+        });
+
+        // Fungsi Pindah Tab (Chat POV / Buket / Buat Sendiri)
+        function switchTab(tabName) {
+            const views = ["chat", "bouquet", "custom"];
+            views.forEach(v => {
+                document.getElementById(`view-${v}`).classList.toggle("hidden", v !== tabName);
+                const btn = document.getElementById(`tabBtn-${v}`);
+                if (v === tabName) {
+                    btn.className = "px-3.5 py-1.5 rounded-full transition-all bg-white text-rose-600 shadow-sm font-semibold";
+                } else {
+                    btn.className = "px-3.5 py-1.5 rounded-full transition-all text-slate-600 hover:text-slate-900";
+                }
+            });
+        }
+
+        // Terapkan Kustomisasi dari Form
+        function applyCustomizations() {
+            state.recipient = document.getElementById("inputRecipient").value.trim() || "Mika";
+            state.sender = document.getElementById("inputSender").value.trim() || "Kea";
+            state.message = document.getElementById("inputMessage").value;
+            state.flower = document.getElementById("selectFlower").value;
+            state.drink = document.getElementById("selectDrink").value;
+            state.sky = document.getElementById("selectSky").value;
+            renderAll();
+        }
+
+        function setLetterTemplate(lang) {
+            const name = state.recipient || "Mika";
+            if (lang === "en") {
+                document.getElementById("inputMessage").value = TEMPLATES.en.replace(/Mika/g, name);
+            } else {
+                document.getElementById("inputMessage").value = TEMPLATES.id + `\n\nI love you always, ${name}.`;
+            }
+            applyCustomizations();
+        }
+
+        // Render Surat & Warna Ilustrasi SVG
+        function renderAll() {
+            document.getElementById("letterGreeting").textContent = `Dearest ${state.recipient},`;
+            document.getElementById("letterBody").textContent = state.message;
+            document.getElementById("letterSignature").textContent = `From, ${state.sender}`;
+
+            // Warna Bunga
+            const palettes = {
+                yellow: { lily: "#fef08a", lilyAlt: "#fde047", roseOut: "#f97316", roseMid: "#ea580c", sec: "#fb923c" },
+                red: { lily: "#fecdd3", lilyAlt: "#fda4af", roseOut: "#e11d48", roseMid: "#be123c", sec: "#f43f5e" },
+                pink: { lily: "#fce7f3", lilyAlt: "#fbcfe8", roseOut: "#ec4899", roseMid: "#db2777", sec: "#f472b6" },
+                blue: { lily: "#e0f2fe", lilyAlt: "#bae6fd", roseOut: "#38bdf8", roseMid: "#0284c7", sec: "#60a5fa" }
+            };
+            const p = palettes[state.flower] || palettes.yellow;
+            document.querySelectorAll(".lily-petal").forEach(el => el.setAttribute("fill", p.lily));
+            document.querySelectorAll(".lily-petal-alt").forEach(el => el.setAttribute("fill", p.lilyAlt));
+            document.querySelectorAll(".rose-outer").forEach(el => el.setAttribute("fill", p.roseOut));
+            document.querySelectorAll(".rose-mid").forEach(el => el.setAttribute("fill", p.roseMid));
+            document.querySelectorAll(".petal-secondary").forEach(el => el.setAttribute("fill", p.sec));
+
+            // Warna Minuman Kiri
+            const drinkColors = { boba: "#eab676", matcha: "#86efac", strawberry: "#f9a8d4" };
+            document.getElementById("drinkLiquid").setAttribute("fill", drinkColors[state.drink] || "#eab676");
+
+            // Suasana Langit
+            const skyCanvas = document.getElementById("skyCanvas");
+            const stars = document.getElementById("starsGroup");
+            if (state.sky === "sunset") {
+                skyCanvas.className = "w-full aspect-[4/5] rounded-2xl overflow-hidden relative bg-gradient-to-b from-[#fed7aa] via-[#fce7f3] to-[#fff7ed] flex items-center justify-center";
+                stars.classList.add("hidden");
+            } else if (state.sky === "night") {
+                skyCanvas.className = "w-full aspect-[4/5] rounded-2xl overflow-hidden relative bg-gradient-to-b from-[#1e293b] via-[#334155] to-[#475569] flex items-center justify-center";
+                stars.classList.remove("hidden");
+            } else {
+                skyCanvas.className = "w-full aspect-[4/5] rounded-2xl overflow-hidden relative bg-gradient-to-b from-[#eef4ff] via-[#f7faff] to-[#ffffff] flex items-center justify-center";
+                stars.classList.add("hidden");
+            }
+        }
+
+        // Buka & Tutup Modal Surat Cinta
+        function openLetterModal() {
+            document.getElementById("letterModal").classList.remove("hidden");
+            playChime();
+        }
+
+        function closeLetterModal() {
+            document.getElementById("letterModal").classList.add("hidden");
+        }
+
+        // Efek Klik Reaksi di Chat POV
+        function triggerReaction(emojiHtml) {
+            showToast(`Mengirim reaksi ${emojiHtml}`);
+            setTimeout(() => switchTab("bouquet"), 600);
+        }
+
+        // Salin Link untuk Dikirim ke Pasangan
+        function copyShareLink() {
+            const url = new URL(window.location.href.split("?")[0]);
+            url.searchParams.set("to", state.recipient);
+            url.searchParams.set("from", state.sender);
+            url.searchParams.set("flower", state.flower);
+            url.searchParams.set("drink", state.drink);
+            url.searchParams.set("sky", state.sky);
+            url.searchParams.set("msg", state.message);
+            url.searchParams.set("mode", "gift");
+
+            navigator.clipboard.writeText(url.toString()).then(() => {
+                showToast("Link berhasil disalin! Siap dikirim ke chat dia.");
+            }).catch(() => {
+                prompt("Salin link di bawah ini untuk dikirim ke dia:", url.toString());
+            });
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById("toastBox");
+            toast.innerHTML = text;
+            toast.classList.remove("hidden");
+            setTimeout(() => toast.classList.add("hidden"), 3000);
+        }
+
+        // Efek Suara & Kotak Musik Romantis (Web Audio API - Tanpa File MP3 Eksternal)
+        function playChime() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const notes = [523.25, 659.25, 783.99, 1046.5];
+                notes.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = "sine";
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime + i * 0.09);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.09 + 0.5);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + i * 0.09);
+                    osc.stop(audioCtx.currentTime + i * 0.09 + 0.5);
+                });
+            } catch (e) { }
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById("musicBtn");
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            isMusicPlaying = !isMusicPlaying;
+
+            if (isMusicPlaying) {
+                btn.innerHTML = "&#127925; Musik: On";
+                const melody = [523.25, 659.25, 783.99, 659.25, 880.0, 783.99, 659.25, 587.33];
+                let step = 0;
+                musicInterval = setInterval(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = "triangle";
+                    osc.frequency.value = melody[step % melody.length];
+                    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.55);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.55);
+                    step++;
+                }, 600);
+            } else {
+                btn.innerHTML = "&#127925; Musik: Off";
+                clearInterval(musicInterval);
+            }
+        }
+    </script>
+</body>
+
+</html>
